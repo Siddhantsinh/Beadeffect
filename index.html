@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Transform live camera feed into stunning bead art in real-time."/>
+  <title>BeadCam — Live Video to Bead Art</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <section id="splash" class="splash">
+    <div class="splash-bg"></div>
+    <div class="splash-content">
+      <div class="splash-logo">
+        <span class="logo-bead b1"></span><span class="logo-bead b2"></span>
+        <span class="logo-bead b3"></span><span class="logo-bead b4"></span><span class="logo-bead b5"></span>
+      </div>
+      <h1 class="splash-title">Bead<span>Cam</span></h1>
+      <p class="splash-subtitle">Transform your live camera or any photo into mesmerizing bead art.</p>
+      <div class="splash-actions">
+        <button id="btn-start" class="btn-primary">📷 Launch Camera</button>
+        <button id="btn-upload-splash" class="btn-primary btn-upload">🖼️ Upload Image</button>
+      </div>
+      <p class="splash-note">Camera requires permission · Works best on desktop</p>
+      <input type="file" id="file-input" accept="image/*" hidden/>
+    </div>
+  </section>
+
+  <main id="app" class="app hidden">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h2 class="topbar-title">BeadCam</h2>
+      </div>
+      <div class="topbar-right">
+        <button id="btn-capture" class="btn-icon" title="Capture">📸</button>
+        <button id="btn-fullscreen" class="btn-icon" title="Fullscreen">⛶</button>
+        <button id="btn-toggle-panel" class="btn-icon" title="Controls">⚙</button>
+      </div>
+    </header>
+    <div class="canvas-wrap" id="canvas-wrap">
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="bead-canvas"></canvas>
+      <!-- Floating Capture Button -->
+      <button id="btn-capture-float" class="btn-capture-float" title="Capture Photo (C)">
+        <span class="capture-ring"></span>
+        <span class="capture-inner"></span>
+      </button>
+      <div id="flash-overlay" class="flash-overlay"></div>
+      <div id="fps-counter" class="fps-counter">-- FPS</div>
+      <div id="bead-counter" class="bead-counter">0 beads</div>
+    </div>
+    <aside id="panel" class="panel">
+      <div class="panel-inner">
+        <h3 class="panel-heading">Controls</h3>
+        <div class="control-group">
+          <label for="slider-bead-size"><span class="label-text">Bead Size</span><span class="label-value" id="val-bead-size">12</span></label>
+          <input type="range" id="slider-bead-size" min="4" max="30" value="12" step="1"/>
+        </div>
+        <div class="control-group">
+          <label for="slider-bead-gap"><span class="label-text">Gap</span><span class="label-value" id="val-bead-gap">2</span></label>
+          <input type="range" id="slider-bead-gap" min="0" max="8" value="2" step="1"/>
+        </div>
+        <div class="control-group">
+          <label><span class="label-text">Shape</span></label>
+          <div class="shape-options">
+            <button class="shape-btn active" data-shape="circle" id="shape-circle">●</button>
+            <button class="shape-btn" data-shape="square" id="shape-square">■</button>
+            <button class="shape-btn" data-shape="diamond" id="shape-diamond">◆</button>
+            <button class="shape-btn" data-shape="hexagon" id="shape-hex">⬡</button>
+          </div>
+        </div>
+        <div class="control-group">
+          <label><span class="label-text">Color Mode</span></label>
+          <div class="palette-options">
+            <button class="palette-btn active" data-palette="natural" id="palette-natural">Natural</button>
+            <button class="palette-btn" data-palette="perler" id="palette-perler">Perler</button>
+            <button class="palette-btn" data-palette="hama" id="palette-hama">Hama</button>
+            <button class="palette-btn" data-palette="pastel" id="palette-pastel">Pastel</button>
+            <button class="palette-btn" data-palette="neon" id="palette-neon">Neon</button>
+            <button class="palette-btn" data-palette="grayscale" id="palette-grayscale">B&W</button>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="slider-bead-3d"><span class="label-text">3D Effect</span><span class="label-value" id="val-bead-3d">80%</span></label>
+          <input type="range" id="slider-bead-3d" min="0" max="100" value="80" step="5"/>
+        </div>
+        <div class="control-group">
+          <label><span class="label-text">Background</span></label>
+          <div class="bg-options">
+            <button class="bg-btn active" data-bg="pegboard" id="bg-pegboard">Pegboard</button>
+            <button class="bg-btn" data-bg="dark" id="bg-dark">Dark</button>
+            <button class="bg-btn" data-bg="light" id="bg-light">Light</button>
+            <button class="bg-btn" data-bg="transparent" id="bg-transparent">None</button>
+          </div>
+        </div>
+        <div class="control-group toggle-group">
+          <label for="toggle-mirror"><span class="label-text">Mirror</span></label>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-mirror" checked/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="control-group toggle-group">
+          <label for="toggle-grid"><span class="label-text">Show Grid</span></label>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-grid"/><span class="toggle-slider"></span></label>
+        </div>
+
+        <!-- Enhancements Section -->
+        <div class="panel-divider"></div>
+        <h3 class="panel-heading">Enhancements</h3>
+        
+        <div class="control-group">
+          <label for="slider-brightness">
+            <span class="label-text">Brightness</span>
+            <span class="label-value" id="val-brightness">100%</span>
+          </label>
+          <input type="range" id="slider-brightness" min="50" max="150" value="100" step="1"/>
+        </div>
+
+        <div class="control-group">
+          <label for="slider-contrast">
+            <span class="label-text">Contrast</span>
+            <span class="label-value" id="val-contrast">100%</span>
+          </label>
+          <input type="range" id="slider-contrast" min="50" max="150" value="100" step="1"/>
+        </div>
+
+        <div class="control-group">
+          <label for="slider-saturation">
+            <span class="label-text">Saturation</span>
+            <span class="label-value" id="val-saturation">100%</span>
+          </label>
+          <input type="range" id="slider-saturation" min="0" max="200" value="100" step="1"/>
+        </div>
+
+        <div class="control-group toggle-group">
+          <label for="toggle-dither">
+            <span class="label-text">Smooth Dithering</span>
+          </label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle-dither" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <!-- Source Section -->
+        <div class="panel-divider"></div>
+        <h3 class="panel-heading">Source</h3>
+        <div class="control-group">
+          <div id="source-label" class="source-label">📷 Live Camera</div>
+        </div>
+        <div class="control-group">
+          <button id="btn-upload-panel" class="btn-secondary full-width btn-upload-panel">🖼️ Upload Image</button>
+        </div>
+        <div class="control-group" id="wrap-back-camera" style="display:none;">
+          <button id="btn-back-camera" class="btn-secondary full-width">📷 Back to Camera</button>
+        </div>
+        <div class="control-group" style="margin-top:12px;">
+          <button id="btn-pause" class="btn-secondary full-width">⏸ Pause</button>
+        </div>
+        <div class="control-group">
+          <button id="btn-switch-cam" class="btn-secondary full-width">🔄 Switch Camera</button>
+        </div>
+      </div>
+    </aside>
+    <div id="capture-toast" class="capture-toast">✅ Image saved!</div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
