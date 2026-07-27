@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Transform live camera feed into stunning bead art in real-time."/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Transform live camera feed into stunning bead art in real-time." />
+  <meta name="theme-color" content="#000000" />
   <title>BeadCam — Live Video to Bead Art</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&family=Syne:wght@700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <section id="splash" class="splash">
     <div class="splash-bg"></div>
@@ -25,7 +30,7 @@
         <button id="btn-upload-splash" class="btn-primary btn-upload">🖼️ Upload Image</button>
       </div>
       <p class="splash-note">Camera requires permission · Works best on desktop</p>
-      <input type="file" id="file-input" accept="image/*" hidden/>
+      <input type="file" id="file-input" accept="image/*" hidden />
     </div>
   </section>
 
@@ -35,33 +40,35 @@
         <h2 class="topbar-title">BeadCam</h2>
       </div>
       <div class="topbar-right">
-        <button id="btn-capture" class="btn-icon" title="Capture">📸</button>
-        <button id="btn-fullscreen" class="btn-icon" title="Fullscreen">⛶</button>
-        <button id="btn-toggle-panel" class="btn-icon" title="Controls">⚙</button>
+        <button id="btn-capture" class="btn-icon" title="Capture" aria-label="Capture photo">📸</button>
+        <button id="btn-fullscreen" class="btn-icon" title="Fullscreen" aria-label="Toggle fullscreen">⛶</button>
+        <button id="btn-toggle-panel" class="btn-icon" title="Controls" aria-label="Toggle controls panel">⚙</button>
       </div>
     </header>
     <div class="canvas-wrap" id="canvas-wrap">
       <video id="video" autoplay playsinline muted></video>
       <canvas id="bead-canvas"></canvas>
       <!-- Floating Capture Button -->
-      <button id="btn-capture-float" class="btn-capture-float" title="Capture Photo (C)">
+      <button id="btn-capture-float" class="btn-capture-float" title="Capture Photo (C)" aria-label="Capture photo">
         <span class="capture-ring"></span>
         <span class="capture-inner"></span>
       </button>
       <div id="flash-overlay" class="flash-overlay"></div>
-      <div id="fps-counter" class="fps-counter">-- FPS</div>
-      <div id="bead-counter" class="bead-counter">0 beads</div>
+      <div id="fps-counter" class="fps-counter" aria-live="polite">-- FPS</div>
+      <div id="bead-counter" class="bead-counter" aria-live="polite">0 beads</div>
     </div>
     <aside id="panel" class="panel">
       <div class="panel-inner">
         <h3 class="panel-heading">Controls</h3>
         <div class="control-group">
-          <label for="slider-bead-size"><span class="label-text">Bead Size</span><span class="label-value" id="val-bead-size">12</span></label>
-          <input type="range" id="slider-bead-size" min="4" max="30" value="12" step="1"/>
+          <label for="slider-bead-size"><span class="label-text">Bead Size</span><span class="label-value"
+              id="val-bead-size">12</span></label>
+          <input type="range" id="slider-bead-size" min="4" max="30" value="12" step="1" />
         </div>
         <div class="control-group">
-          <label for="slider-bead-gap"><span class="label-text">Gap</span><span class="label-value" id="val-bead-gap">2</span></label>
-          <input type="range" id="slider-bead-gap" min="0" max="8" value="2" step="1"/>
+          <label for="slider-bead-gap"><span class="label-text">Gap</span><span class="label-value"
+              id="val-bead-gap">2</span></label>
+          <input type="range" id="slider-bead-gap" min="0" max="8" value="2" step="1" />
         </div>
         <div class="control-group">
           <label><span class="label-text">Shape</span></label>
@@ -84,8 +91,9 @@
           </div>
         </div>
         <div class="control-group">
-          <label for="slider-bead-3d"><span class="label-text">3D Effect</span><span class="label-value" id="val-bead-3d">80%</span></label>
-          <input type="range" id="slider-bead-3d" min="0" max="100" value="80" step="5"/>
+          <label for="slider-bead-3d"><span class="label-text">3D Effect</span><span class="label-value"
+              id="val-bead-3d">80%</span></label>
+          <input type="range" id="slider-bead-3d" min="0" max="100" value="80" step="5" />
         </div>
         <div class="control-group">
           <label><span class="label-text">Background</span></label>
@@ -98,23 +106,25 @@
         </div>
         <div class="control-group toggle-group">
           <label for="toggle-mirror"><span class="label-text">Mirror</span></label>
-          <label class="toggle-switch"><input type="checkbox" id="toggle-mirror" checked/><span class="toggle-slider"></span></label>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-mirror" checked /><span
+              class="toggle-slider"></span></label>
         </div>
         <div class="control-group toggle-group">
           <label for="toggle-grid"><span class="label-text">Show Grid</span></label>
-          <label class="toggle-switch"><input type="checkbox" id="toggle-grid"/><span class="toggle-slider"></span></label>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-grid" /><span
+              class="toggle-slider"></span></label>
         </div>
 
         <!-- Enhancements Section -->
         <div class="panel-divider"></div>
         <h3 class="panel-heading">Enhancements</h3>
-        
+
         <div class="control-group">
           <label for="slider-brightness">
             <span class="label-text">Brightness</span>
             <span class="label-value" id="val-brightness">100%</span>
           </label>
-          <input type="range" id="slider-brightness" min="50" max="150" value="100" step="1"/>
+          <input type="range" id="slider-brightness" min="50" max="150" value="100" step="1" />
         </div>
 
         <div class="control-group">
@@ -122,7 +132,7 @@
             <span class="label-text">Contrast</span>
             <span class="label-value" id="val-contrast">100%</span>
           </label>
-          <input type="range" id="slider-contrast" min="50" max="150" value="100" step="1"/>
+          <input type="range" id="slider-contrast" min="50" max="150" value="100" step="1" />
         </div>
 
         <div class="control-group">
@@ -130,7 +140,7 @@
             <span class="label-text">Saturation</span>
             <span class="label-value" id="val-saturation">100%</span>
           </label>
-          <input type="range" id="slider-saturation" min="0" max="200" value="100" step="1"/>
+          <input type="range" id="slider-saturation" min="0" max="200" value="100" step="1" />
         </div>
 
         <div class="control-group toggle-group">
@@ -164,6 +174,12 @@
     </aside>
     <div id="capture-toast" class="capture-toast">✅ Image saved!</div>
   </main>
+  <noscript>
+    <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#000;color:#fff;font-family:sans-serif;text-align:center;padding:2rem;">
+      <p>BeadCam requires JavaScript to run. Please enable JavaScript in your browser settings.</p>
+    </div>
+  </noscript>
   <script src="script.js"></script>
 </body>
+
 </html>
